@@ -1,0 +1,10 @@
+name: rocket
+rarity: Common
+price: 100
+image: builder/bot/items/image/rocket.png
+colors:
+  - white
+  - black
+  - blue
+  - pink
+  - green
