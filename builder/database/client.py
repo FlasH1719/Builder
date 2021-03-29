@@ -3,6 +3,7 @@ import logging
 import inspect
 import asyncpg
 from typing import Optional
+from builder.paths import TABLES_PATH
 
 class DBClient:
     """
@@ -26,7 +27,7 @@ class DBClient:
         self.logger = logging.getLogger("Builder DB")
         """The database logger"""
 
-    async def create_db_pool(self, _):
+    async def create_pool(self, _): #as we're gonna use this method as subscription callback, it must take one argument (event)
         """
         Create the database pool
         """
@@ -79,11 +80,10 @@ class DBClient:
         """
         Create all tables in builder/database/tables
         """
-        files = [
-            os.path.join("builder/database/tables", f)
-            for f in os.listdir("builder/database/tables") 
-            if f.endswith(".sql")
-        ]
+        files = (
+            os.path.join(TABLES_PATH, f)
+            for f in os.listdir(TABLES_PATH)
+        )
         
         for filename in files:
             await self.executescript(filename)

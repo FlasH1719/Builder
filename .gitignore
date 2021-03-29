@@ -18,6 +18,7 @@ venv*/
 .vs/
 
 # Secrets
+.env
 .pypirc
 
 # Setuptools/twine-generated files, compiled sources.

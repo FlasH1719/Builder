@@ -1,6 +1,6 @@
 import yaml
 from typing import Dict, Any
-from builder.bot.paths import *
+from builder.paths import ITEM_DEFINITION_PATH
 
 class Item:
     def __init__(self, name: str, /) -> None:

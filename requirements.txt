@@ -1,4 +1,5 @@
 PyYAML==5.4.1
 asyncpg==0.22.0
 hikari==2.0.0.dev100
+python-dotenv==0.16.0
 hikari-lightbulb==0.0.59
