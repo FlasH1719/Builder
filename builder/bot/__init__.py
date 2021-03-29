@@ -1,10 +1,12 @@
 import os
+import json
 import hikari
 import logging
-from lightbulb import Bot
+from lightbulb import Bot, Command
 from datetime import datetime, timezone
 from builder.database.client import DBClient
-from builder.paths import PLUGINS_PATH
+from builder.paths import PLUGINS_PATH, I18N_PATH
+from builder.bot.context import *
 
 class BuilderBot(Bot):
     __slots__ = ("db", "_start_uptime", "logger")
@@ -13,6 +15,14 @@ class BuilderBot(Bot):
         self.db = database
         self.logger: logging.Logger = logging.getLogger("Builder Bot")
         self._start_uptime: datetime = datetime.now(tz=timezone.utc)
+
+        self.translations = {}
+        language_files = os.listdir(I18N_PATH)
+        for lang_file in language_files:
+            with open(I18N_PATH + "/" + lang_file) as f:
+                data = json.load(f)
+            
+            self.translations[lang_file[:-5]] = data #we don't want the '.json' file extension
 
         super().__init__(*args, **kwargs)
 
@@ -27,8 +37,22 @@ class BuilderBot(Bot):
         plugins = (
             os.path.join(PLUGINS_PATH, f).replace("/", ".")[:-3]
             for f in os.listdir(PLUGINS_PATH)
+            if f.endswith(".py")
         )
 
         for plugin in plugins:
             self.load_extension(plugin)
             self.logger.info("Loaded %s", plugin)
+
+    def get_context(
+        self,
+        message: hikari.Message,
+        prefix: str,
+        invoked_with: str,
+        invoked_command: Command
+    ) -> Context:
+        """
+        Provide the custom context class for commands
+        """
+
+        return Context(self, message, prefix, invoked_with, invoked_command)

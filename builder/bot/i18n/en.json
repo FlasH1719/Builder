@@ -1,0 +1,10 @@
+{
+    "ping": {
+        "Message": {
+            "1": "Pong!"
+        },
+        "Edit": {
+            "1": "Pong!\nHeartbeat: {}ms\nACK: {}ms"
+        }
+    }
+}
