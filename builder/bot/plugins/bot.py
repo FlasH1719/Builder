@@ -20,22 +20,21 @@ class Bot(Plugin):
         Get the heartbeat and REST API latency of the bot
         """
 
-        t_msg = ctx.translate_message(
-            TranslationType.Message,
-            1
+        translated_msg = ctx.translate_message(
+            TranslationType.Text,
+            0
         )
         start = time.perf_counter()
-        message = await ctx.respond(t_msg)
+        message = await ctx.respond(translated_msg)
 
         ack = round((time.perf_counter() - start) * 1000)
         heartbeat = round(self.bot.heartbeat_latency * 1000)
-        t_edited_msg = ctx.translate_message(
-            TranslationType.Edit,
+        translated_edited_msg = ctx.translate_message(
+            TranslationType.Text,
             1
         ).format(heartbeat, ack)
 
-        await message.edit(t_edited_msg)
-
-
+        await message.edit(translated_edited_msg)
+    
 def load(bot: BuilderBot) -> None:
     bot.add_plugin(Bot(bot))

@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from builder.database.client import DBClient
 from builder.paths import PLUGINS_PATH, I18N_PATH
 from builder.bot.context import *
+from builder.bot.i18n import *
 
 class BuilderBot(Bot):
     __slots__ = ("db", "_start_uptime", "logger")
@@ -17,12 +18,18 @@ class BuilderBot(Bot):
         self._start_uptime: datetime = datetime.now(tz=timezone.utc)
 
         self.translations = {}
-        language_files = os.listdir(I18N_PATH)
+        language_files = [
+            f for f in os.listdir(I18N_PATH)
+            if f.endswith(".json")
+        ]
+
         for lang_file in language_files:
             with open(I18N_PATH + "/" + lang_file) as f:
                 data = json.load(f)
             
             self.translations[lang_file[:-5]] = data #we don't want the '.json' file extension
+
+        self.languages = parse_languages()
 
         super().__init__(*args, **kwargs)
 
